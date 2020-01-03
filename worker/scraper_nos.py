@@ -1,7 +1,7 @@
 import urllib.request
 from worker.scraper_components.nos import url_generator, get_contents
 
-ARTICLE_ID = 2317221
+ARTICLE_ID = 2317223
 
 for url in url_generator(ARTICLE_ID):
 
