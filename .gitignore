@@ -2,3 +2,6 @@
 *.idea
 *pgdata/
 *venv/
+*.DS_Store
+storage/articles
+worker/drivers

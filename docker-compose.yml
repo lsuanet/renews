@@ -6,7 +6,7 @@ services:
     image: postgres:latest
     restart: always
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - ./database/pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
@@ -20,3 +20,7 @@ services:
     restart: always
     ports:
       - 8080:8080
+
+  scheduler:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

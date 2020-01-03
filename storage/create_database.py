@@ -32,10 +32,12 @@ class Article(Base):
 	id = Column(Integer, primary_key=True)
 	news_source_id = Column(Integer, ForeignKey('news_source.id'))
 	source_id = Column(Integer)
+	is_article = Column(Boolean)
 	dt_updated = Column(DateTime)
 	title = Column(String(256))
 	body_uri = Column(String(256))
 	url = Column(String(256))
+	category = Column(String(64))
 
 
 class Scrape(Base):
