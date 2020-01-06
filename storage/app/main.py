@@ -40,7 +40,7 @@ app = Flask(__name__)
 swagger = Swagger(app, template=template)
 
 
-@app.route('/news-source/', methods=['POST'])
+@app.route('/', methods=['POST'])
 @swag_from('../docs/create_news_source.yml')
 def create_news_source():
 	'''
@@ -72,9 +72,9 @@ def create_news_source():
 	return response, status_code
 
 
-@app.route('/news-source/<name>', methods=['GET'])
+@app.route('/news-sources/<news_id>', methods=['GET'])
 @swag_from('../docs/get_news_source.yml')
-def get_news_source(name):
+def get_news_source(news_id):
 	'''
 	Create a news source
 	:return:
@@ -82,11 +82,8 @@ def get_news_source(name):
 	response = dict()
 
 	try:
-		# get arguments from body
-		# body = request.json
-		# logger.info('Request body:\n' + json.dumps(body))
 
-		response = storage.get_news_source(name=name)
+		response = storage.get_news_source(news_id=news_id)
 
 		status_code = 202
 		logger.info('Success.')
@@ -99,9 +96,9 @@ def get_news_source(name):
 
 	return response, status_code
 
-@app.route('/news-source/<news_id>/', methods=['POST'])
+@app.route('/articles', methods=['POST'])
 @swag_from('../docs/create_article.yml')
-def create_article(news_id):
+def create_article():
 	'''
 	Create an article
 	:return:
@@ -110,10 +107,22 @@ def create_article(news_id):
 
 	try:
 		# get arguments from body
-		# body = request.json
+		body = request.json
 		# logger.info('Request body:\n' + json.dumps(body))
 
-		response = storage.create_article(news_id=news_id)
+		news_id = body['news_id']
+		article_id = body['article_id']
+		is_article = body['is_article']
+		url = body['url']
+		title = body.get('title', None)
+		article_body = body.get('body', None)
+		published = body.get('published', None)
+		last_updated = body.get('last_updated', None)
+		category = body.get('category', None)
+
+		response = storage.create_article(news_id=news_id, article_id=article_id, is_article=is_article, url=url,
+																			title=title, body=article_body, published=published,
+																			last_updated=last_updated, category=category)
 
 		status_code = 202
 		logger.info('Success.')

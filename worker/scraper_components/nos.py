@@ -39,4 +39,5 @@ def get_contents(html, url):
 def url_generator(article_id):
 	for base in BASE_URL:
 		for item in URL_TYPES:
-			yield base + item + str(article_id)
+			url = base + item + str(article_id)
+			yield url, base == BASE_URL[0] and item == URL_TYPES[1]
