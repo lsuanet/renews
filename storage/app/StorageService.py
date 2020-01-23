@@ -123,7 +123,7 @@ class StorageService:
 
 		published = datetime.datetime.strptime(published, "%Y-%m-%dT%X%z")
 		last_updated = datetime.datetime.strptime(last_updated, "%Y-%m-%dT%X%z") if last_updated is not None else None
-		print(news_id,article_id,is_article,title,body_filename,url,category,published,last_updated)
+		print(news_id, article_id, is_article, title, body_filename, url, category, published, last_updated)
 
 		# add the article to db
 		article = Article(news_source_id=news_id, article_id=article_id, is_article=is_article, title=title,

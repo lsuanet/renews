@@ -155,7 +155,7 @@ def get_article():
 
 		response = storage.get_article(news_id=news_id, article_id=article_id)
 
-		status_code = 202
+		status_code = 200
 		logger.info('Success.')
 
 	except Exception as e:
@@ -183,7 +183,7 @@ def get_latest_article():
 
 		response = storage.get_latest_article(news_id=news_id)
 
-		status_code = 202
+		status_code = 200
 		logger.info('Success.')
 
 	except Exception as e:
