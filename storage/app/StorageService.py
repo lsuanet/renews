@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, ForeignKey, inspect
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, ForeignKey, inspect, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
@@ -39,6 +39,9 @@ class Article(declarative_base()):
 	created = Column(DateTime, default=datetime.datetime.now)
 	article_last_updated = Column(DateTime)
 
+	def as_dict(self):
+		return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 class Scrape(declarative_base()):
 	__tablename__ = 'scrape'
@@ -63,7 +66,7 @@ class StorageService:
 		port = os.getenv("PG_PORT")
 		connection_string = "postgresql://" + user + ":" + password + "@" + host + ":" + port + "/" + database
 
-		self.__engine = create_engine(connection_string, echo=True)
+		self.__engine = create_engine(connection_string, echo=False)
 		declarative_base().metadata.create_all(self.__engine)
 		self.__Session = sessionmaker(bind=self.__engine)
 
@@ -118,6 +121,10 @@ class StorageService:
 		with open(STORAGE_FOLDER_PATH + body_filename, "w") as text_file:
 			text_file.write(body)
 
+		published = datetime.datetime.strptime(published, "%Y-%m-%dT%X%z")
+		last_updated = datetime.datetime.strptime(last_updated, "%Y-%m-%dT%X%z") if last_updated is not None else None
+		print(news_id,article_id,is_article,title,body_filename,url,category,published,last_updated)
+
 		# add the article to db
 		article = Article(news_source_id=news_id, article_id=article_id, is_article=is_article, title=title,
 											body_file_path=body_filename, url=url, category=category, article_published=published,
@@ -127,10 +134,44 @@ class StorageService:
 
 		# get the source
 		source = session.query(Article).filter(Article.news_source_id == news_id,
-																					 Article.article_id == article_id).order_by(Article.id.desc())
+																					 Article.article_id == article_id).order_by(Article.id.desc()).first()
 
-		# this still fails
-		source = object_as_dict(source)
 		session.close()
 
-		return source
+		return source.as_dict()
+
+	def get_latest_article(self, news_id):
+		session = self.__Session()
+
+		article_nr = session.query(func.max(Article.article_id)).filter(Article.news_source_id == news_id).first()[0]
+
+		session.close()
+
+		response = {
+			"article_nr": article_nr
+		}
+
+		return response
+
+	# TODO
+	def get_article(self, news_id, article_id):
+
+		session = self.__Session()
+
+		article = session.query(Article).filter(Article.news_source_id == news_id, Article.article_id == article_id).order_by(Article.id.desc()).first()
+
+		session.close()
+		# check if exists
+		if not article:
+			raise('Does not exist')
+
+		response = article.as_dict()
+		body_path = response['body_file_path']
+		response.pop('body_file_path', None)
+
+		with open(STORAGE_FOLDER_PATH + body_path + '.txt', 'r') as file:
+			body = file.read()
+
+		response['body'] = body
+
+		return response

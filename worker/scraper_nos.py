@@ -1,39 +1,38 @@
-import urllib.request
+import requests
 from worker.scraper_components.nos import url_generator, get_contents
 
-ARTICLE_ID = 2317222
+ARTICLE_ID = 2319748
 NEWS_SOURCE_ID = 1
-STORAGE_URL = ''
+STORAGE_URL = 'http://localhost:5000'
 
 title = None
 
-for url, is_correct_page in url_generator(ARTICLE_ID):
+url = 'https://nos.nl/artikel/' + str(ARTICLE_ID)
 
-	try:
-		request = urllib.request.urlopen(url)
+r = requests.get(url)
 
-	except:
-		print('Not found: ' + url)
-		continue
+content = r.text
 
-	content = request.read()
-	if is_correct_page:
-		try:
-			title, published, modified, body = get_contents(content, url)
-			print('Found: ' + url)
+try:
+	title, published, modified, body = get_contents(content)
+	print('Found: ' + url)
 
-			# write to database
-			print(title)
-			print(published)
-			print(modified)
-			print(body)
-		except:
-			print('Found, but failed to scrape: ' + url)
-			# error
+	data = {
+		"title": title,
+		"news_id": 1,
+		"article_id": ARTICLE_ID,
+		"is_article": True,
+		"url": url,
+		"body": body,
+		"published": published,
+		"last_updated": modified,
+		"category": "Unknown"
+	}
 
-	else:
-		print('Found, but not correct page: ' + url)
+	# write to database
 
-		# write to db
+	requests.post(STORAGE_URL + '/articles', json=data)
 
-	break
+except:
+	print('Found, but failed to scrape: ' + url)
+	# error

@@ -134,3 +134,63 @@ def create_article():
 		status_code = 400
 
 	return response, status_code
+
+
+@app.route('/articles', methods=['GET'])
+@swag_from('../docs/get_article.yml')
+def get_article():
+	'''
+	Create an article
+	:return:
+	'''
+	response = dict()
+
+	try:
+		# get arguments from body
+		params = request.args
+		body = request.json
+
+		news_id = params['news_id']
+		article_id = body['article_id']
+
+		response = storage.get_article(news_id=news_id, article_id=article_id)
+
+		status_code = 202
+		logger.info('Success.')
+
+	except Exception as e:
+		logger.error('Error: ' + str(e))
+		response['message'] = "Oops, something went wrong"
+		response['error'] = str(e)
+		status_code = 400
+
+	return response, status_code
+
+
+@app.route('/articles/getLatest', methods=['GET'])
+@swag_from('../docs/get_latest_article.yml')
+def get_latest_article():
+	'''
+	Create an article
+	:return:
+	'''
+	response = dict()
+
+	try:
+		# get arguments from body
+		params = request.args
+		news_id = params['news_id']
+
+		response = storage.get_latest_article(news_id=news_id)
+
+		status_code = 202
+		logger.info('Success.')
+
+	except Exception as e:
+		logger.error('Error: ' + str(e))
+		response['message'] = "Oops, something went wrong"
+		response['error'] = str(e)
+		status_code = 400
+
+	return response, status_code
+

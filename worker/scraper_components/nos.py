@@ -11,13 +11,9 @@ def cleanhtml(raw_html):
 	return cleantext
 
 
-def get_contents(html, url):
+def get_contents(html):
 
-	if url.startswith(BASE_URL[1]) or \
-					(url.startswith(BASE_URL[0] + URL_TYPES[0]) or url.startswith(BASE_URL[0] + URL_TYPES[3])):
-		return None, None, None, None
-
-	soup = BeautifulSoup(html)
+	soup = BeautifulSoup(html, features="html.parser")
 
 	title = soup.find('h1').string.strip()
 	body_list = soup.find('div', attrs={"class": re.compile("contentBlock")}).find_all('p', attrs={
