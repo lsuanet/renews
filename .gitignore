@@ -6,3 +6,6 @@
 storage/articles
 worker/drivers
 *__pycache__/
+*bertje-base/
+*.ipynb_checkpoints/
+test/articles/
