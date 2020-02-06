@@ -14,28 +14,25 @@ services:
       PG_DATA: /var/lib/postgresql/data/pgdata
     ports:
       - 5432:5432
-#    network_mode: "host"
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
-#    network_mode: "host"
 
   storage_api:
     image: renews-storage
     restart: always
     ports:
       - 5000:5000
-#    network_mode: "host"
     environment:
       PG_USER: ${PG_USER}
       PG_PASSWORD: ${PG_PASSWORD}
       PG_DATABASE: ${PG_DATABASE}
       PG_HOST: ${PG_HOST}
       PG_PORT: ${PG_PORT}
-
-#  scheduler:
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - "db"
+    volumes:
+      - ./storage/articles:/var/articles

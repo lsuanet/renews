@@ -96,6 +96,7 @@ def get_news_source(news_id):
 
 	return response, status_code
 
+
 @app.route('/articles', methods=['POST'])
 @swag_from('../docs/create_article.yml')
 def create_article():

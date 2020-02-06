@@ -7,6 +7,8 @@ import uuid
 
 STORAGE_FOLDER_PATH = '/var/articles/'
 
+Base = declarative_base()
+
 
 def object_as_dict(obj):
     return {c.key: getattr(obj, c.key) for c in inspect(obj).mapper.column_attrs}
@@ -67,7 +69,7 @@ class StorageService:
 		connection_string = "postgresql://" + user + ":" + password + "@" + host + ":" + port + "/" + database
 
 		self.__engine = create_engine(connection_string, echo=False)
-		declarative_base().metadata.create_all(self.__engine)
+		Base.metadata.create_all(self.__engine)
 		self.__Session = sessionmaker(bind=self.__engine)
 
 		return
@@ -118,7 +120,8 @@ class StorageService:
 
 		# store the article body
 		body_filename = str(uuid.uuid4()) + '.txt'
-		with open(STORAGE_FOLDER_PATH + body_filename, "w") as text_file:
+		print(STORAGE_FOLDER_PATH + body_filename)
+		with open(STORAGE_FOLDER_PATH + body_filename, "w+") as text_file:
 			text_file.write(body)
 
 		published = datetime.datetime.strptime(published, "%Y-%m-%dT%X%z")
@@ -169,7 +172,7 @@ class StorageService:
 		body_path = response['body_file_path']
 		response.pop('body_file_path', None)
 
-		with open(STORAGE_FOLDER_PATH + body_path + '.txt', 'r') as file:
+		with open(STORAGE_FOLDER_PATH + body_path, 'r') as file:
 			body = file.read()
 
 		response['body'] = body
