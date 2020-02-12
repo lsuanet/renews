@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 import datetime
 import uuid
 
-STORAGE_FOLDER_PATH = '/var/articles/'
+STORAGE_FOLDER_PATH = '../articles/'
 
 Base = declarative_base()
 
@@ -112,15 +112,9 @@ class StorageService:
 
 		session = self.__Session()
 
-		# check if exists
-		# if session.query(Article).filter(Article.name == name, NewsSource.country_code == country_code,
-		# 																					NewsSource.base_url == base_url).first():
-		# 	session.close()
-		# 	raise('Already exists')
-
 		# store the article body
-		body_filename = str(uuid.uuid4()) + '.txt'
-		print(STORAGE_FOLDER_PATH + body_filename)
+		generated_id = str(uuid.uuid4())
+		body_filename = generated_id + '.txt'
 		with open(STORAGE_FOLDER_PATH + body_filename, "w+") as text_file:
 			text_file.write(body)
 

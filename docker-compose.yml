@@ -21,18 +21,18 @@ services:
     ports:
       - 8080:8080
 
-  storage_api:
-    image: renews-storage
-    restart: always
-    ports:
-      - 5000:5000
-    environment:
-      PG_USER: ${PG_USER}
-      PG_PASSWORD: ${PG_PASSWORD}
-      PG_DATABASE: ${PG_DATABASE}
-      PG_HOST: ${PG_HOST}
-      PG_PORT: ${PG_PORT}
-    depends_on:
-      - "db"
-    volumes:
-      - ./storage/articles:/var/articles
+#  storage_api:
+#    image: renews-storage
+#    restart: always
+#    ports:
+#      - 5000:5000
+#    environment:
+#      PG_USER: ${PG_USER}
+#      PG_PASSWORD: ${PG_PASSWORD}
+#      PG_DATABASE: ${PG_DATABASE}
+#      PG_HOST: ${PG_HOST}
+#      PG_PORT: ${PG_PORT}
+#    depends_on:
+#      - "db"
+#    volumes:
+#      - ./storage/articles:/var/articles
