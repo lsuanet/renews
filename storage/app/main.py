@@ -2,13 +2,13 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 import logging
+from minio import Minio
 
 import schemas
 import models
 import StorageService as Storage
-from database import SessionLocal, engine
-from database import MINIO_ADDRESS, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
-from minio import Minio
+from database import engine
+from dependencies import get_db, get_minio
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -17,28 +17,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s,%(message)s', datefm
 logger = logging.getLogger('storage')
 
 app = FastAPI()
-
-
-# Dependency
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
-
-
-# Dependency
-def get_minio():
-    try:
-        minio = Minio(MINIO_ADDRESS,
-                  access_key=MINIO_ACCESS_KEY,
-                  secret_key=MINIO_SECRET_KEY,
-                  secure=False)
-        yield minio
-    finally:
-        pass
-
 
 @app.post('/news-sources', response_model=schemas.NewsSource)
 def create_news_source(news_source: schemas.NewsSourceCreate, db: Session = Depends(get_db),
