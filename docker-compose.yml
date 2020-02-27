@@ -21,6 +21,18 @@ services:
     ports:
       - 8080:8080
 
+  minio:
+    image: minio/minio
+    restart: always
+    volumes:
+      - ./minio/data:/data
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+    ports:
+      - 9000:9000
+    command: server /data
+
 #  storage_api:
 #    image: renews-storage
 #    restart: always
