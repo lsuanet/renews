@@ -5,7 +5,7 @@ import logging
 
 import schemas
 import models
-import StorageService2 as Storage
+import StorageService as Storage
 from database import SessionLocal, engine
 from database import MINIO_ADDRESS, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
 from minio import Minio

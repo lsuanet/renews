@@ -9,3 +9,4 @@ worker/drivers
 *bertje-base/
 *.ipynb_checkpoints/
 test/articles/
+minio/
