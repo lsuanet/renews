@@ -15,9 +15,8 @@ RUN rm /requirements.txt
 
 # add application to image
 COPY app /app
-#COPY docs /docs
 WORKDIR /app/
 
 EXPOSE 5000
 
-CMD ["/bin/sh", "start.sh"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]

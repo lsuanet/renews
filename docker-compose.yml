@@ -33,18 +33,24 @@ services:
       - 9000:9000
     command: server /data
 
-#  storage_api:
+  articles:
 #    image: renews-storage
-#    restart: always
-#    ports:
-#      - 5000:5000
-#    environment:
-#      PG_USER: ${PG_USER}
-#      PG_PASSWORD: ${PG_PASSWORD}
-#      PG_DATABASE: ${PG_DATABASE}
-#      PG_HOST: ${PG_HOST}
-#      PG_PORT: ${PG_PORT}
-#    depends_on:
-#      - "db"
-#    volumes:
-#      - ./storage/articles:/var/articles
+    build: articles/
+    restart: always
+    ports:
+      - 5000:5000
+    environment:
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_DATABASE: ${PG_DATABASE}
+      PG_HOST: 'db'
+      PG_PORT: ${PG_PORT}
+      MINIO_HOST: 'minio'
+      MINIO_PORT: '9000'
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+    depends_on:
+      - "db"
+      - "minio"
+    volumes:
+      - ./articles/articles:/var/articles

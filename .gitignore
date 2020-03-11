@@ -3,7 +3,7 @@
 *pgdata/
 *venv/
 *.DS_Store
-storage/articles
+articles/articles
 worker/drivers
 *__pycache__/
 *bertje-base/

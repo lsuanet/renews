@@ -2,19 +2,18 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from minio import Minio
-from minio.error import ResponseError
+import os
 
-DATABASE = "renews"
-USER = "renews"
-PASSWORD = "RA67x{hEXF9v?364&oTiQ}+%"
-HOST = "localhost"
-PORT = 5432
+DATABASE = os.getenv("PG_DATABASE")
+USER = os.getenv("PG_USER")
+PASSWORD = os.getenv("PG_PASSWORD")
+HOST = os.getenv("PG_HOST")
+PORT = int(os.getenv("PG_PORT"))
 
-MINIO_HOST = "localhost"
-MINIO_PORT = 9000
-MINIO_ACCESS_KEY = "storage"
-MINIO_SECRET_KEY = "k33HCiJLsYhchuTRR4!L*JHR"
+MINIO_HOST = os.getenv("MINIO_HOST")
+MINIO_PORT = int(os.getenv("MINIO_PORT"))
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
+MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 
 MINIO_ADDRESS = "%s:%s" % (MINIO_HOST, str(MINIO_PORT))
 

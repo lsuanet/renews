@@ -6,6 +6,7 @@ from typing import List
 class ArticleBase(BaseModel):
     site_article_id: int
     url: str
+    news_source_id: int
     title: str = None
     article_body: str = None
     published: datetime = None
@@ -19,7 +20,6 @@ class ArticleCreate(ArticleBase):
 
 class Article(ArticleBase):
     id: int
-    news_source_id: int
     created: datetime
     last_updated: datetime
 
